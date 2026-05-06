@@ -309,80 +309,76 @@ const EmergencyHug = () => {
   const handleHug = () => {
     setShowHug(true);
     confetti({
-      particleCount: 150,
-      spread: 70,
-      origin: { y: 0.6 },
+      particleCount: 200,
+      spread: 90,
+      origin: { y: 0.5 },
       colors: ['#E29578', '#83C5BE', '#FFB4A2']
     });
     
-    // Heart confetti
-    const end = Date.now() + 3 * 1000;
-    const colors = ['#ff69b4', '#ff1493', '#ff0000'];
-
-    (function frame() {
-      confetti({
-        particleCount: 3,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: colors
-      });
-      confetti({
-        particleCount: 3,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: colors
-      });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
-    }());
-
     setTimeout(() => setShowHug(false), 5000);
   };
 
   return (
-    <div className="py-20 flex flex-col items-center justify-center bg-[#FFFDF5]">
+    <div className="py-40 flex flex-col items-center justify-center relative">
+      <div className="absolute inset-0 bg-white/30 backdrop-blur-sm -z-10" />
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        className="text-center mb-12"
+      >
+        <h2 className="text-5xl md:text-7xl font-handwritten text-[#DCAE96] mb-4">Feeling down?</h2>
+        <p className="text-xl text-[#83C5BE] uppercase tracking-[0.2em]">You deserve this</p>
+      </motion.div>
+
       <motion.button
-        whileHover={{ scale: 1.1 }}
+        whileHover={{ scale: 1.1, rotate: [0, -2, 2, 0] }}
         whileTap={{ scale: 0.9 }}
         onClick={handleHug}
-        className="px-12 py-6 bg-[#83C5BE] text-white rounded-full text-3xl font-handwritten shadow-2xl hover:bg-[#72b4ad] transition-colors relative group"
+        className="relative group p-4"
       >
-        Click for an Instant Hug
-        <motion.div 
-          className="absolute -top-4 -right-4"
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-        >
-          ❤️
-        </motion.div>
+        <div className="absolute inset-0 bg-[#83C5BE] rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity" />
+        <div className="px-16 py-10 bg-[#83C5BE] text-white rounded-[3rem] text-4xl md:text-6xl font-handwritten shadow-2xl hover:bg-[#72b4ad] transition-all relative z-10 border-4 border-white">
+          Click for a Squishy Hug
+          <motion.div 
+            className="absolute -top-6 -right-6 bg-white p-3 rounded-full shadow-lg"
+            animate={{ scale: [1, 1.3, 1], rotate: [0, 15, -15, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+          >
+            <Heart size={40} className="text-red-500" fill="currentColor" />
+          </motion.div>
+        </div>
       </motion.button>
 
       <AnimatePresence>
         {showHug && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-md"
+            onClick={() => setShowHug(false)}
           >
-            <div className="relative w-full max-w-2xl px-4">
+            <motion.div 
+              initial={{ scale: 0.5, rotate: -10 }}
+              animate={{ scale: 1, rotate: 0 }}
+              exit={{ scale: 0.5, rotate: 10 }}
+              className="relative w-full max-w-3xl px-6"
+            >
                <img 
                 src="https://media.tenor.com/V7RzI-5G80cAAAAi/baymax-hug.gif" 
                 alt="Big Hero 6 Hug" 
-                className="w-full rounded-3xl shadow-2xl"
+                className="w-full rounded-[4rem] shadow-[0_0_100px_rgba(255,255,255,0.3)] border-8 border-white"
               />
               <motion.div 
-                initial={{ y: 20 }}
-                animate={{ y: 0 }}
-                className="absolute -bottom-10 left-0 right-0 text-center"
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="absolute -bottom-20 left-0 right-0 text-center"
               >
-                <h2 className="text-4xl font-pacifico text-[#E29578]">Warm Hug Sent!</h2>
+                <h2 className="text-6xl md:text-8xl font-pacifico text-white drop-shadow-lg">I LOVE YOU!</h2>
               </motion.div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -428,7 +424,7 @@ export default function App() {
 
   // May 9th, 12 AM Nepali Time (NPT is UTC +5:45)
   // For 2024, 2025, or 2026? Assuming 2026 based on current year instructions
-  const TARGET_DATE = new Date("2025-05-09T00:00:00+05:45");
+  const TARGET_DATE = new Date("2026-05-09T00:00:00+05:45");
 
   useEffect(() => {
     // Check if current time is already past target
@@ -485,45 +481,94 @@ export default function App() {
             </section>
           ) : (
             /* FULL UNLOCKED SITE */
-            <>
+            <div className="relative">
+              {/* Background Decorations */}
+              <div className="fixed inset-0 pointer-events-none opacity-20">
+                {[...Array(20)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute"
+                    initial={{ 
+                      x: Math.random() * window.innerWidth, 
+                      y: Math.random() * window.innerHeight 
+                    }}
+                    animate={{ 
+                      y: [null, Math.random() * -100, Math.random() * 100],
+                      rotate: [0, 360]
+                    }}
+                    transition={{ 
+                      duration: 10 + Math.random() * 20, 
+                      repeat: Infinity, 
+                      ease: "linear" 
+                    }}
+                  >
+                    <Heart size={Math.random() * 40 + 10} className="text-[#E29578]" />
+                  </motion.div>
+                ))}
+              </div>
+
               {/* Section 1: Hero */}
-              <section className="min-h-screen flex flex-col items-center justify-center py-40 px-8 relative overflow-hidden">
-                <div className="absolute top-20 left-10 md:left-40 animate-bounce-slow hidden sm:block">
-                  <img src="https://media.tenor.com/o669T96XmToAAAAi/pusheen-heart.gif" alt="Pusheen" className="w-32 md:w-48" />
-                </div>
-                <div className="absolute top-20 right-10 md:right-40 animate-bounce-slow delay-500 hidden sm:block">
-                  <img src="https://media.tenor.com/2Y0W9Z-8O0wAAAAi/stars-stardust.gif" alt="Stars" className="w-32 md:w-48" />
-                </div>
-
-                <motion.h1 
-                  initial={{ y: -50 }}
-                  whileInView={{ y: 0 }}
-                  className="text-6xl md:text-9xl text-center font-handwritten text-[#DCAE96] mb-12"
-                >
-                  Happy 1 Year, <span className="text-[#E29578]">Babe</span>!
-                </motion.h1>
-
-                <div className="mb-12 text-center text-2xl text-[#83C5BE] font-bold tracking-[0.4em]">
-                  365 DAYS OF US
-                </div>
-
-                <div className="bg-white/50 backdrop-blur-md p-10 md:p-20 rounded-[4rem] shadow-xl border-2 border-white/80">
-                   <h3 className="text-4xl md:text-5xl font-pacifico text-[#E29578] text-center mb-8">Official Time Passed:</h3>
-                   <div className="text-5xl md:text-7xl font-bold text-[#83C5BE] text-center">365 Days & Forever</div>
-                </div>
-
+              <section className="min-h-screen flex flex-col items-center justify-center py-60 px-8 relative">
                 <motion.div 
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  className="mt-20"
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1 }}
+                  className="relative z-10 flex flex-col items-center"
                 >
-                  <Heart className="text-red-400 animate-pulse" size={80} fill="currentColor" />
+                  <div className="relative mb-12">
+                    <motion.div 
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 5, repeat: Infinity }}
+                      className="absolute -top-32 -left-20 md:-left-40 hidden sm:block"
+                    >
+                      <img src="https://media.tenor.com/o669T96XmToAAAAi/pusheen-heart.gif" alt="Pusheen" className="w-40 md:w-56" />
+                    </motion.div>
+                    
+                    <motion.div 
+                      animate={{ y: [0, -20, 0] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                      className="absolute -top-32 -right-20 md:-right-40 hidden sm:block"
+                    >
+                      <img src="https://media.tenor.com/2Y0W9Z-8O0wAAAAi/stars-stardust.gif" alt="Stars" className="w-40 md:w-56" />
+                    </motion.div>
+
+                    <h1 className="text-7xl md:text-[10rem] text-center font-handwritten text-[#DCAE96] leading-none">
+                      Happy 1 Year, <br/>
+                      <span className="text-[#E29578]">Babe!</span>
+                    </h1>
+                  </div>
+
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    transition={{ delay: 0.5, type: 'spring' }}
+                    className="mb-12 text-center text-2xl md:text-3xl text-[#83C5BE] font-bold tracking-[0.5em] uppercase"
+                  >
+                    365 Days of Us
+                  </motion.div>
+
+                  <motion.div 
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-white/70 backdrop-blur-xl p-12 md:p-24 rounded-[5rem] shadow-2xl border-4 border-white relative group"
+                  >
+                    <div className="absolute -inset-4 border-2 border-dashed border-[#83C5BE] rounded-[6rem] opacity-30 group-hover:opacity-100 transition-opacity" />
+                    <h3 className="text-4xl md:text-6xl font-pacifico text-[#E29578] text-center mb-10">Chapter 1 Complete</h3>
+                    <div className="text-6xl md:text-9xl font-bold text-[#83C5BE] text-center drop-shadow-sm font-quicksand">
+                      365 <span className="text-2xl md:text-4xl">Days</span>
+                    </div>
+                    <div className="mt-8 text-center text-gray-400 font-handwritten text-3xl">& Forever to Go</div>
+                  </motion.div>
+
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                    className="mt-20 flex flex-col items-center"
+                  >
+                    <Heart className="text-red-400 animate-pulse mb-4" size={100} fill="currentColor" />
+                    <div className="w-px h-32 bg-gradient-to-b from-[#83C5BE] to-transparent" />
+                  </motion.div>
                 </motion.div>
-                
-                <div className="absolute bottom-20 left-1/2 -translate-x-1/2 animate-bounce text-center">
-                  <p className="text-sm text-gray-400 uppercase tracking-widest mb-4">Scroll down for your garden</p>
-                  <div className="w-1 h-12 bg-[#83C5BE] mx-auto rounded-full" />
-                </div>
               </section>
 
               {/* Section 2: Garden */}
@@ -543,7 +588,7 @@ export default function App() {
 
               {/* Section 5: Footer */}
               <Footer />
-            </>
+            </div>
           )}
         </motion.main>
       )}
