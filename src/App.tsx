@@ -136,10 +136,10 @@ const LoveGarden = () => {
 
 const PolaroidTimeline = () => {
   const moments = [
-    { title: "Where it started", date: "Day 1", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop", note: "Our first coffee date." },
-    { title: "First Trip", date: "Day 45", img: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop", note: "Adventure awaits!" },
-    { title: "Lazy Sundays", date: "Day 120", img: "https://images.unsplash.com/photo-1527631746610-bca00a040d60?q=80&w=1974&auto=format&fit=crop", note: "Simply being with you." },
-    { title: "True Love", date: "Day 200", img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2070&auto=format&fit=crop", note: "The best is yet to come." },
+    { title: "Where it started", date: "Day 1", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop", note: "Our Meet." },
+    { title: "Your Birthday", date: "Day 45", img: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop", note: "Came at 6pm to meet my love" },
+    { title: "The Day I Won", date: "Day 120", img: "https://images.unsplash.com/photo-1527631746610-bca00a040d60?q=80&w=1974&auto=format&fit=crop", note: "The day mero baacha slept in mero lap" },
+    { title: "One of the best days", date: "Day 200", img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2070&auto=format&fit=crop", note: "Vibing with music and talking." },
     { title: "One Year!", date: "Day 365", img: "https://images.unsplash.com/photo-1531747118685-ca8fa6e08806?q=80&w=2018&auto=format&fit=crop", note: "I love you forever." }
   ];
 
