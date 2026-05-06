@@ -136,11 +136,11 @@ const LoveGarden = () => {
 
 const PolaroidTimeline = () => {
   const moments = [
-    { title: "Where it started", date: "Day 1", img: "/images/1st.jpg", note: "Our Meet." },
-    { title: "Your Birthday", date: "Day 45", img: "/images/2nd.jpg", note: "Came at 6pm to meet my love" },
-    { title: "The Day I Won", date: "Day 120", img: "/images/3rd.jpg", note: "The day mero baacha slept in mero lap" },
-    { title: "One of the best days", date: "Day 200", img: "/images/4th.jpg", note: "Vibing with music and talking." },
-    { title: "One Year!", date: "Day 365", img: "/images/5th.jpg", note: "I love you forever." }
+    { title: "Where it started", date: "Day 1", img: "images/1st.jpg", note: "Our Meet." },
+    { title: "Your Birthday", date: "Day 45", img: "images/2nd.jpg", note: "Came at 6pm to meet my love" },
+    { title: "The Day I Won", date: "Day 120", img: "images/3rd.jpg", note: "The day mero baacha slept in mero lap" },
+    { title: "One of the best days", date: "Day 200", img: "images/4th.jpg", note: "Vibing with music and talking." },
+    { title: "One Year!", date: "Day 365", img: "images/5th.jpg", note: "I love you forever." }
   ];
 
   return (
