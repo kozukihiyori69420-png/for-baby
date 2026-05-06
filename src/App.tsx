@@ -27,9 +27,8 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#FFFDF5] w-screen h-screen"
-      style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
     >
-      <div className="flex flex-col items-center max-w-xs w-full px-6">
+      <div className="flex flex-col items-center max-w-xs w-full px-6 text-center">
         <div className="w-48 h-48 md:w-64 md:h-64 mb-6">
           <img 
             src="https://media.tenor.com/7S872pXl_N0AAAAi/milk-and-mocha-bear.gif" 
@@ -37,10 +36,10 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
             className="w-full h-full object-contain"
           />
         </div>
-        <div className="text-xl md:text-3xl font-handwritten text-[#DCAE96] mb-6 text-center leading-relaxed">
+        <div className="text-2xl md:text-3xl font-handwritten text-[#DCAE96] mb-6 leading-relaxed">
           Assembling 365 days <br /> of memories...
         </div>
-        <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden relative border border-gray-100 shadow-inner">
+        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden relative border border-gray-100 shadow-inner">
           <motion.div 
             className="h-full bg-gradient-to-r from-[#83C5BE] to-[#E29578]"
             initial={{ width: 0 }}
@@ -57,57 +56,40 @@ const LoadingScreen = ({ onComplete }: { onComplete: () => void }) => {
 };
 
 const Countdown = ({ targetDate, onComplete }: { targetDate: Date, onComplete?: () => void }) => {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    isOver: false
-  });
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, isOver: false });
 
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
       const diff = targetDate.getTime() - now.getTime();
-      
       if (diff <= 0) {
         setTimeLeft(prev => ({ ...prev, isOver: true }));
         clearInterval(timer);
         if (onComplete) onComplete();
         return;
       }
-
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / 1000 / 60) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      setTimeLeft({ days, hours, minutes, seconds, isOver: false });
+      setTimeLeft({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / 1000 / 60) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+        isOver: false
+      });
     }, 1000);
-
     return () => clearInterval(timer);
   }, [targetDate, onComplete]);
 
   return (
-    <div className="flex flex-wrap justify-center gap-6 md:gap-12 text-[#E29578]">
+    <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-[#E29578]">
       {[
         { label: 'Days', value: timeLeft.days },
         { label: 'Hours', value: timeLeft.hours },
         { label: 'Minutes', value: timeLeft.minutes },
         { label: 'Seconds', value: timeLeft.seconds },
       ].map((item) => (
-        <div key={item.label} className="flex flex-col items-center bg-white/40 backdrop-blur-sm p-6 rounded-3xl min-w-[120px] md:min-w-[160px] shadow-sm border border-white/50">
-          <motion.span
-            key={item.value}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="text-5xl md:text-7xl font-bold font-pacifico"
-          >
-            {item.value}
-          </motion.span>
-          <span className="text-lg md:text-xl uppercase tracking-[0.2em] font-handwritten text-[#83C5BE] mt-2">
-            {item.label}
-          </span>
+        <div key={item.label} className="flex flex-col items-center bg-white/40 backdrop-blur-sm p-4 md:p-6 rounded-2xl min-w-[80px] md:min-w-[120px] shadow-sm">
+          <motion.span key={item.value} className="text-3xl md:text-6xl font-bold font-pacifico">{item.value}</motion.span>
+          <span className="text-[10px] md:text-sm uppercase tracking-widest font-bold text-[#83C5BE] mt-1">{item.label}</span>
         </div>
       ))}
     </div>
@@ -116,9 +98,7 @@ const Countdown = ({ targetDate, onComplete }: { targetDate: Date, onComplete?: 
 
 const LoveGarden = () => {
   const [activeNote, setActiveNote] = useState<string | null>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showMusic, setShowMusic] = useState(false);
-  
   const flowers = [
     { id: 1, note: "I love the way you laugh at my silly jokes.", color: "#E29578" },
     { id: 2, note: "You make every day feel like a dream.", color: "#83C5BE" },
@@ -128,164 +108,65 @@ const LoveGarden = () => {
     { id: 6, note: "I can't wait for many more years with you.", color: "#E5989B" },
   ];
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
   return (
-    <div 
-      className="relative py-20 bg-[#FFFDF5] overflow-hidden cursor-none"
-      onMouseMove={handleMouseMove}
-    >
-      {/* Custom Bee Cursor for this section */}
-      <motion.div 
-        className="fixed pointer-events-none z-40 w-12 h-12"
-        animate={{ x: mousePos.x, y: mousePos.y }}
-        transition={{ type: 'spring', damping: 20, stiffness: 150, mass: 0.5 }}
-        style={{ position: 'absolute' }}
-      >
-        <img src="https://media.tenor.com/T_62E76K7z8AAAAi/bee-joy.gif" alt="Bee" className="w-full h-full" />
-      </motion.div>
-
-      <div className="max-w-4xl mx-auto text-center px-4">
-        <h2 className="text-4xl md:text-5xl mb-12 text-[#DCAE96]">The "Why I Love You" Garden</h2>
-        <div className="flex flex-wrap justify-center gap-12">
-          {flowers.map((flower) => (
-            <motion.div
-              key={flower.id}
-              whileHover={{ scale: 1.2, rotate: 10 }}
-              onClick={() => {
-                setActiveNote(flower.note);
-                if (flower.isGolden) setShowMusic(true);
-              }}
-              className="cursor-pointer relative group"
-            >
-              <div className={`w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full ${flower.isGolden ? 'bg-yellow-100 shadow-[0_0_15px_rgba(251,191,36,0.6)]' : 'bg-white'}`}>
-                {flower.isGolden ? (
-                  <Flower2 className="text-yellow-500" size={48} />
-                ) : (
-                  <Flower2 style={{ color: flower.color }} size={40} />
-                )}
-              </div>
-              <motion.div 
-                className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-              >
-                <Sparkles className="text-yellow-400" size={16} />
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
-
-        <AnimatePresence>
-          {activeNote && (
-            <motion.div
-              initial={{ opacity: 0, y: 20, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.8 }}
-              className="mt-16 p-6 bg-white rounded-2xl shadow-lg border-2 border-[#83C5BE] max-w-md mx-auto relative"
-            >
-              <button 
-                onClick={() => setActiveNote(null)}
-                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-              >
-                ✕
-              </button>
-              <p className="text-xl font-handwritten text-[#E29578]">{activeNote}</p>
-              {showMusic && activeNote.includes("favorite person") && (
-                <div className="mt-4 flex flex-col items-center gap-2 text-[#83C5BE]">
-                  <div className="flex items-center gap-2 animate-pulse">
-                    <Music size={20} />
-                    <span className="text-sm">Playing "Our Song" ✨</span>
-                  </div>
-                  <div className="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
-                    <motion.div 
-                      className="h-full bg-[#83C5BE]"
-                      animate={{ width: ["0%", "100%"] }}
-                      transition={{ duration: 10, repeat: Infinity }}
-                    />
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
+    <div className="relative py-20 bg-[#FFFDF5] text-center px-4 overflow-hidden">
+      <h2 className="text-4xl md:text-6xl font-handwritten text-[#DCAE96] mb-12">Love Garden</h2>
+      <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+        {flowers.map((flower) => (
+          <motion.div
+            key={flower.id}
+            whileHover={{ scale: 1.2 }}
+            onClick={() => { setActiveNote(flower.note); if (flower.isGolden) setShowMusic(true); }}
+            className="cursor-pointer relative"
+          >
+            <div className={`w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full ${flower.isGolden ? 'bg-yellow-100 shadow-lg' : 'bg-white shadow-md'}`}>
+              <Flower2 style={{ color: flower.isGolden ? '#F59E0B' : flower.color }} size={40} />
+            </div>
+          </motion.div>
+        ))}
       </div>
+      <AnimatePresence>
+        {activeNote && (
+          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="mt-12 p-6 bg-white rounded-3xl shadow-xl max-w-sm mx-auto border-2 border-[#83C5BE] relative">
+            <button onClick={() => setActiveNote(null)} className="absolute top-2 right-2 text-gray-400">✕</button>
+            <p className="text-xl font-handwritten text-[#E29578]">{activeNote}</p>
+            {showMusic && activeNote.includes("favorite person") && <div className="mt-4 text-[#83C5BE] animate-pulse flex items-center justify-center gap-2"><Music size={16} /><span>Playing Our Song...</span></div>}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 const PolaroidTimeline = () => {
   const moments = [
-    {
-      title: "Where it all started",
-      date: "Day 1",
-      img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop",
-      note: "That first awkward coffee date..."
-    },
-    {
-      title: "Our funniest fail",
-      date: "Day 45",
-      img: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop",
-      note: "Remember the burnt pizza night? 😂"
-    },
-    {
-      title: "Adventures together",
-      date: "Day 120",
-      img: "https://images.unsplash.com/photo-1527631746610-bca00a040d60?q=80&w=1974&auto=format&fit=crop",
-      note: "Hiking until our feet hurt."
-    },
-    {
-      title: "The moment I knew",
-      date: "Day 200",
-      img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2070&auto=format&fit=crop",
-      note: "I knew I loved you then."
-    },
-    {
-      title: "Volume 1 Finale",
-      date: "Day 365",
-      img: "https://images.unsplash.com/photo-1531747118685-ca8fa6e08806?q=80&w=2018&auto=format&fit=crop",
-      note: "Happy 1 Year Anniversary!"
-    }
+    { title: "Where it started", date: "Day 1", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop", note: "Our first coffee date." },
+    { title: "First Trip", date: "Day 45", img: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop", note: "Adventure awaits!" },
+    { title: "Lazy Sundays", date: "Day 120", img: "https://images.unsplash.com/photo-1527631746610-bca00a040d60?q=80&w=1974&auto=format&fit=crop", note: "Simply being with you." },
+    { title: "True Love", date: "Day 200", img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=2070&auto=format&fit=crop", note: "The best is yet to come." },
+    { title: "One Year!", date: "Day 365", img: "https://images.unsplash.com/photo-1531747118685-ca8fa6e08806?q=80&w=2018&auto=format&fit=crop", note: "I love you forever." }
   ];
 
   return (
-    <div className="py-12 md:py-24 bg-[#FFFDF5] overflow-hidden">
+    <div className="py-20 bg-[#FFFDF5] overflow-hidden">
       <div className="px-6 mb-8 text-center">
-        <h2 className="text-4xl md:text-8xl font-handwritten text-[#DCAE96] mb-2">Our Memories</h2>
-        <p className="text-[#83C5BE] font-bold tracking-[0.1em] uppercase text-[10px] md:text-sm italic">← Swipe to see →</p>
+        <h2 className="text-4xl md:text-8xl font-handwritten text-[#DCAE96] mb-2 text-shadow">Our Memories</h2>
+        <p className="text-[#83C5BE] font-bold tracking-widest uppercase text-xs">← Swipe to see →</p>
       </div>
-      
-      {/* Native Swipable Container - Fixed for Mobile Viewport */}
       <div className="flex overflow-x-auto gap-4 px-6 pb-12 snap-x snap-mandatory scroll-smooth no-scrollbar touch-pan-x">
         {moments.map((moment, idx) => (
-          <div
-            key={idx}
-            className="flex-shrink-0 w-[85vw] md:w-96 snap-center"
-          >
-            <div className="bg-white p-3 pb-12 shadow-xl border border-gray-100 rounded-sm transform transition-transform" style={{ rotate: `${idx % 2 === 0 ? -1 : 1}deg` }}>
+          <div key={idx} className="flex-shrink-0 w-[85vw] md:w-96 snap-center">
+            <div className="bg-white p-3 pb-12 shadow-2xl border border-gray-100 rounded-sm transform transition-transform" style={{ rotate: `${idx % 2 === 0 ? -1 : 1}deg` }}>
               <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-gray-50">
-                <img 
-                  src={moment.img} 
-                  alt={moment.title} 
-                  className="w-full h-full object-cover" 
-                />
-                <div className="absolute top-2 right-2 mix-blend-screen opacity-60">
-                   <img src="https://media.tenor.com/0i_p7H2uWf0AAAAi/sparkles.gif" className="w-8 h-8" alt="Sparkle" />
-                </div>
+                <img src={moment.img} alt={moment.title} className="w-full h-full object-cover" />
+                <div className="absolute top-2 right-2 opacity-60"><img src="https://media.tenor.com/0i_p7H2uWf0AAAAi/sparkles.gif" className="w-8 h-8" alt="Sparkle" /></div>
               </div>
-              
-              <div className="mt-4 px-1">
-                <h3 className="text-2xl font-handwritten text-[#E29578] mb-1 leading-tight">{moment.title}</h3>
-                <p className="text-[9px] text-[#83C5BE] font-bold uppercase tracking-widest mb-2">{moment.date}</p>
-                <p className="text-base font-handwritten text-gray-600 italic leading-snug leading-tight line-clamp-2">"{moment.note}"</p>
+              <div className="mt-4 px-1 text-left">
+                <h3 className="text-2xl font-handwritten text-[#E29578] mb-1">{moment.title}</h3>
+                <p className="text-[10px] text-[#83C5BE] font-bold uppercase tracking-widest mb-2">{moment.date}</p>
+                <p className="text-base font-handwritten text-gray-600 italic">"{moment.note}"</p>
               </div>
-
-              <div className="absolute bottom-3 right-3 opacity-20">
-                <Heart size={16} />
-              </div>
+              <div className="absolute bottom-3 right-3 opacity-20"><Heart size={16} /></div>
             </div>
           </div>
         ))}
@@ -296,85 +177,21 @@ const PolaroidTimeline = () => {
 
 const EmergencyHug = () => {
   const [showHug, setShowHug] = useState(false);
-
-  const handleHug = () => {
-    setShowHug(true);
-    confetti({
-      particleCount: 200,
-      spread: 90,
-      origin: { y: 0.5 },
-      colors: ['#E29578', '#83C5BE', '#FFB4A2']
-    });
-    
-    setTimeout(() => setShowHug(false), 5000);
-  };
+  const handleHug = () => { setShowHug(true); confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); setTimeout(() => setShowHug(false), 5000); };
 
   return (
-    <div className="py-32 md:py-48 flex flex-col items-center justify-center relative px-6">
-      <div className="absolute inset-0 bg-[#83C5BE]/5 -z-10" />
-      
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        className="text-center mb-16"
-      >
-        <h2 className="text-6xl md:text-8xl font-handwritten text-[#DCAE96] mb-4">Feeling down?</h2>
-        <div className="flex items-center justify-center gap-4">
-          <span className="h-px w-12 bg-[#83C5BE]" />
-          <p className="text-xl md:text-2xl text-[#83C5BE] uppercase tracking-[0.3em] font-bold">You deserve this</p>
-          <span className="h-px w-12 bg-[#83C5BE]" />
-        </div>
-      </motion.div>
-
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={handleHug}
-        className="relative px-12 py-8 md:px-24 md:py-16 bg-white border-2 border-[#83C5BE] rounded-[3rem] md:rounded-[5rem] shadow-[0_20px_50px_rgba(131,197,190,0.15)] group overflow-hidden"
-      >
-        <div className="absolute inset-0 bg-[#83C5BE] translate-y-[101%] group-hover:translate-y-0 transition-transform duration-500" />
-        
-        <span className="relative z-10 text-3xl md:text-6xl font-handwritten text-[#83C5BE] group-hover:text-white transition-colors duration-500">
-          Click for a Squishy Hug
-        </span>
-        
-        <motion.div 
-          className="absolute top-2 right-4 md:top-8 md:right-12 z-20"
-          animate={{ rotate: [0, 20, -20, 0], scale: [1, 1.2, 1] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-        >
-          <Heart size={32} className="text-red-400 fill-red-400 md:w-16 md:h-16" />
-        </motion.div>
+    <div className="py-24 flex flex-col items-center justify-center relative px-6">
+      <h2 className="text-5xl md:text-8xl font-handwritten text-[#DCAE96] mb-12">Feeling down?</h2>
+      <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={handleHug} className="relative px-12 py-8 bg-white border-2 border-[#83C5BE] rounded-[2rem] shadow-xl group overflow-hidden">
+        <div className="absolute inset-0 bg-[#83C5BE] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+        <span className="relative z-10 text-3xl md:text-5xl font-handwritten text-[#83C5BE] group-hover:text-white transition-colors duration-500">Click for a Hug</span>
       </motion.button>
-
       <AnimatePresence>
         {showHug && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-xl p-4 md:p-12"
-            onClick={() => setShowHug(false)}
-          >
-            <motion.div 
-              initial={{ scale: 0.8, y: 100 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.8, y: 100 }}
-              className="relative w-full max-w-4xl"
-            >
-               <img 
-                src="https://media.tenor.com/V7RzI-5G80cAAAAi/baymax-hug.gif" 
-                alt="Big Hero 6 Hug" 
-                className="w-full rounded-[2rem] md:rounded-[4rem] shadow-2xl border-4 md:border-8 border-white"
-              />
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="absolute -bottom-16 md:-bottom-24 left-0 right-0 text-center"
-              >
-                <h2 className="text-5xl md:text-[8rem] font-pacifico text-white drop-shadow-2xl">I LOVE YOU!</h2>
-              </motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-xl p-6" onClick={() => setShowHug(false)}>
+            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="relative w-full max-w-2xl">
+              <img src="https://media.tenor.com/V7RzI-5G80cAAAAi/baymax-hug.gif" alt="Hug" className="w-full rounded-[2rem] border-4 border-white shadow-2xl" />
+              <h2 className="absolute -bottom-16 left-0 right-0 text-center text-5xl md:text-8xl font-pacifico text-white">I LOVE YOU!</h2>
             </motion.div>
           </motion.div>
         )}
@@ -383,207 +200,62 @@ const EmergencyHug = () => {
   );
 };
 
-const Footer = () => {
-  return (
-    <footer className="py-32 bg-white text-center px-6 relative overflow-hidden">
-      <div className="max-w-4xl mx-auto pt-16 border-t border-[#83C5BE]/20 relative">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          className="relative z-10"
-        >
-          <h2 className="text-4xl md:text-6xl text-[#DCAE96] mb-8 font-handwritten">
-            I can’t wait to write the next 365 pages with you.
-          </h2>
-          <p className="text-3xl md:text-4xl font-handwritten text-[#E29578] mb-16 italic">See you in Volume 2.</p>
-          
-          <div className="flex flex-col items-center gap-8">
-            <motion.div 
-              whileHover={{ rotate: [0, -10, 10, 0] }}
-              className="relative w-32 h-32 md:w-48 md:h-48"
-            >
-              <img 
-                src="https://media.tenor.com/fA1a2C3eK-sAAAAi/mailbox-love.gif" 
-                alt="Mailbox" 
-                className="w-full h-full object-contain"
-              />
-            </motion.div>
-            <div className="bg-[#83C5BE]/10 px-8 py-3 rounded-full">
-              <span className="text-sm md:text-base text-[#83C5BE] uppercase tracking-[0.4em] font-bold">
-                Volume 1: Complete • Volume 2: Loading...
-              </span>
-            </div>
-          </div>
-        </motion.div>
+const Footer = () => (
+  <footer className="py-32 bg-white text-center px-6 relative overflow-hidden">
+    <div className="max-w-4xl mx-auto pt-16 border-t border-gray-100">
+      <h2 className="text-4xl md:text-7xl text-[#DCAE96] mb-6 font-handwritten">Next 365 pages with you.</h2>
+      <p className="text-3xl md:text-4xl font-handwritten text-[#E29578] mb-12 italic">See you in Volume 2.</p>
+      <div className="flex flex-col items-center gap-6">
+        <img src="https://media.tenor.com/fA1a2C3eK-sAAAAi/mailbox-love.gif" alt="Mailbox" className="w-32 h-32 object-contain" />
+        <span className="text-xs text-[#83C5BE] uppercase tracking-[0.4em] font-bold">Volume 1: Complete</span>
       </div>
-      
-      {/* Background Ornaments */}
-      <div className="absolute top-20 left-10 text-[#83C5BE] opacity-10 rotate-12"><Heart size={80} /></div>
-      <div className="absolute bottom-20 right-10 text-[#E29578] opacity-10 -rotate-12"><Heart size={80} /></div>
-    </footer>
-  );
-};
-
-// --- Main App ---
+    </div>
+  </footer>
+);
 
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [isLocked, setIsLocked] = useState(true);
-
-  // May 9th, 12 AM Nepali Time (NPT is UTC +5:45)
   const TARGET_DATE = new Date("2025-05-09T00:00:00+05:45");
 
-  useEffect(() => {
-    // Check if current time is already past target
-    if (new Date() >= TARGET_DATE) {
-      setIsLocked(false);
-    }
-  }, []);
-
-  const handleCountdownEnd = () => {
-    setIsLocked(false);
-    confetti({
-      particleCount: 200,
-      spread: 100,
-      origin: { y: 0.6 }
-    });
-  };
+  useEffect(() => { if (new Date() >= TARGET_DATE) setIsLocked(false); }, []);
+  const handleCountdownEnd = () => { setIsLocked(false); confetti({ particleCount: 200, spread: 100 }); };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#FFFDF5]">
       <AnimatePresence>
         {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       </AnimatePresence>
 
       {!loading && (
-        <motion.main
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
+        <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
           {isLocked ? (
-            /* LOCK SCREEN - Hardcore Countdown */
-            <section className="min-h-screen flex flex-col items-center justify-center p-8 bg-[#FFFDF5] text-center">
-              <motion.div 
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="max-w-4xl"
-              >
-                <div className="mb-12">
-                  <img src="https://media.tenor.com/2Y0W9Z-8O0wAAAAi/stars-stardust.gif" alt="Stars" className="w-32 h-32 mx-auto mb-6" />
-                  <h1 className="text-6xl md:text-8xl font-handwritten text-[#DCAE96] mb-4">Almost Time...</h1>
-                  <p className="text-xl md:text-2xl text-[#83C5BE] font-bold tracking-[0.3em] uppercase">The Magic Begins In:</p>
-                </div>
-
-                <Countdown targetDate={TARGET_DATE} onComplete={handleCountdownEnd} />
-
-                <div className="mt-16 flex flex-col items-center gap-4">
-                  <div className="flex gap-4">
-                    <img src="https://media.tenor.com/o669T96XmToAAAAi/pusheen-heart.gif" alt="Pusheen" className="w-20" />
-                    <img src="https://media.tenor.com/7S872pXl_N0AAAAi/milk-and-mocha-bear.gif" alt="Mocha" className="w-20" />
-                  </div>
-                  <p className="font-handwritten text-2xl text-[#E29578] italic">Counting every second until it's officially ours.</p>
-                </div>
-              </motion.div>
+            <section className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
+              <img src="https://media.tenor.com/2Y0W9Z-8O0wAAAAi/stars-stardust.gif" alt="Stars" className="w-24 h-24 mb-6" />
+              <h1 className="text-5xl md:text-8xl font-handwritten text-[#DCAE96] mb-8">Almost Time...</h1>
+              <Countdown targetDate={TARGET_DATE} onComplete={handleCountdownEnd} />
+              <p className="mt-12 font-handwritten text-2xl text-[#E29578] italic">Counting down until it's officially ours.</p>
             </section>
           ) : (
-            /* FULL UNLOCKED SITE */
             <div className="relative">
-              {/* Background Decorations */}
-              <div className="fixed inset-0 pointer-events-none opacity-20">
-                {[...Array(20)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute"
-                    initial={{ 
-                      x: Math.random() * window.innerWidth, 
-                      y: Math.random() * window.innerHeight 
-                    }}
-                    animate={{ 
-                      y: [null, Math.random() * -100, Math.random() * 100],
-                      rotate: [0, 360]
-                    }}
-                    transition={{ 
-                      duration: 10 + Math.random() * 20, 
-                      repeat: Infinity, 
-                      ease: "linear" 
-                    }}
-                  >
-                    <Heart size={Math.random() * 40 + 10} className="text-[#E29578]" />
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Section 1: Hero */}
-              <section className="min-h-screen flex flex-col items-center justify-center py-60 px-8 relative">
-                <motion.div 
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1 }}
-                  className="relative z-10 flex flex-col items-center"
-                >
-                  <div className="relative mb-8 md:mb-12 w-full px-4">
-                    {/* Floating Mobile Decorations */}
-                    <div className="flex justify-between w-full mb-4 md:hidden">
-                       <img src="https://media.tenor.com/o669T96XmToAAAAi/pusheen-heart.gif" alt="Pusheen" className="w-16 h-16" />
-                       <img src="https://media.tenor.com/2Y0W9Z-8O0wAAAAi/stars-stardust.gif" alt="Stars" className="w-16 h-16" />
-                    </div>
-
-                    <h1 className="text-[2.8rem] md:text-[10rem] text-center font-handwritten text-[#DCAE96] leading-[1.2]">
-                      Happy 1 Year, <br className="md:hidden" />
-                      <span className="text-[#E29578]">Babe!</span>
-                    </h1>
-                  </div>
-
-                  <motion.div 
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    transition={{ delay: 0.5, type: 'spring' }}
-                    className="mb-10 text-center text-lg md:text-3xl text-[#83C5BE] font-bold tracking-[0.3em] md:tracking-[0.5em] uppercase px-4"
-                  >
-                    365 Days of Us
-                  </motion.div>
-
-                  <motion.div 
-                    whileHover={{ scale: 1.02 }}
-                    className="bg-white/70 backdrop-blur-xl p-8 md:p-24 rounded-[3rem] md:rounded-[5rem] shadow-2xl border-2 md:border-4 border-white relative group mx-4"
-                  >
-                    <div className="absolute -inset-2 md:-inset-4 border border-dashed border-[#83C5BE] rounded-[3.5rem] md:rounded-[6rem] opacity-30 group-hover:opacity-100 transition-opacity" />
-                    <h3 className="text-3xl md:text-6xl font-pacifico text-[#E29578] text-center mb-6 md:mb-10">Chapter 1 Complete</h3>
-                    <div className="text-5xl md:text-9xl font-bold text-[#83C5BE] text-center drop-shadow-sm font-quicksand">
-                      365 <span className="text-xl md:text-4xl text-gray-400">DAYS</span>
-                    </div>
-                    <div className="mt-6 md:mt-10 text-center text-gray-500 font-handwritten text-2xl md:text-4xl italic">& forever to go</div>
-                  </motion.div>
-
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
-                    className="mt-20 flex flex-col items-center"
-                  >
-                    <Heart className="text-red-400 animate-pulse mb-4" size={100} fill="currentColor" />
-                    <div className="w-px h-32 bg-gradient-to-b from-[#83C5BE] to-transparent" />
-                  </motion.div>
+              <section className="min-h-screen flex flex-col items-center justify-center py-40 px-6 relative">
+                <div className="flex justify-between w-full max-w-md mb-8 md:hidden">
+                  <img src="https://media.tenor.com/o669T96XmToAAAAi/pusheen-heart.gif" alt="Pusheen" className="w-16 h-16" />
+                  <img src="https://media.tenor.com/2Y0W9Z-8O0wAAAAi/stars-stardust.gif" alt="Stars" className="w-16 h-16" />
+                </div>
+                <h1 className="text-[3rem] md:text-[10rem] text-center font-handwritten text-[#DCAE96] leading-tight mb-8">
+                  Happy 1 Year, <br className="md:hidden" /> <span className="text-[#E29578]">Babe!</span>
+                </h1>
+                <div className="bg-white/60 backdrop-blur-xl p-8 md:p-24 rounded-[3rem] shadow-2xl border-2 border-white mx-4 max-w-4xl text-center">
+                   <h3 className="text-3xl md:text-6xl font-pacifico text-[#E29578] mb-6">Chapter 1 Complete</h3>
+                   <div className="text-5xl md:text-9xl font-bold text-[#83C5BE]">365 <span className="text-xl md:text-4xl text-gray-400">DAYS</span></div>
+                   <p className="mt-6 text-gray-500 font-handwritten text-2xl md:text-4xl italic">& forever to go</p>
                 </motion.div>
+                <div className="mt-20"><Heart className="text-red-400 animate-pulse" size={64} fill="currentColor" /></div>
               </section>
-
-              {/* Section 2: Garden */}
-              <div className="py-20">
-                <LoveGarden />
-              </div>
-
-              {/* Section 3: Timeline */}
-              <div className="py-40">
-                <PolaroidTimeline />
-              </div>
-
-              {/* Section 4: Hug */}
-              <div className="py-20">
-                <EmergencyHug />
-              </div>
-
-              {/* Section 5: Footer */}
+              <LoveGarden />
+              <PolaroidTimeline />
+              <EmergencyHug />
               <Footer />
             </div>
           )}
