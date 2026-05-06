@@ -37,11 +37,19 @@ body {
 }
 
 h1, h2, h3, .font-handwritten {
-  font-family: 'Dancing Script', cursive;
+  font-family: 'Pacifico', cursive;
 }
 
-.font-pacifico {
-  font-family: 'Pacifico', cursive;
+.font-playfair {
+  font-family: 'Playfair Display', serif;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Custom scrollbar */
