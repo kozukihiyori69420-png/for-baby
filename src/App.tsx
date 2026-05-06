@@ -424,7 +424,7 @@ export default function App() {
 
   // May 9th, 12 AM Nepali Time (NPT is UTC +5:45)
   // For 2024, 2025, or 2026? Assuming 2026 based on current year instructions
-  const TARGET_DATE = new Date("2026-05-09T00:00:00+05:45");
+  const TARGET_DATE = new Date("2025-05-09T00:00:00+05:45");
 
   useEffect(() => {
     // Check if current time is already past target
