@@ -197,7 +197,7 @@ const EmergencyHug = () => {
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [isLocked, setIsLocked] = useState(true);
-  const TARGET_DATE = new Date("2025-05-09T00:00:00+05:45");
+  const TARGET_DATE = new Date("2026-05-09T00:00:00+05:45");
 
   useEffect(() => { 
     if (new Date() >= TARGET_DATE) setIsLocked(false); 
