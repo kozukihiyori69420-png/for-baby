@@ -252,43 +252,42 @@ const PolaroidTimeline = () => {
   ];
 
   return (
-    <div className="py-24 bg-[#FFFDF5] overflow-hidden">
-      <div className="px-8 mb-12 text-center">
-        <h2 className="text-5xl md:text-8xl font-handwritten text-[#DCAE96] mb-4">Our Polaroid Timeline</h2>
-        <p className="text-[#83C5BE] font-bold tracking-[0.2em] uppercase text-sm">Swipe to see our memories</p>
+    <div className="py-12 md:py-24 bg-[#FFFDF5] overflow-hidden">
+      <div className="px-6 mb-8 text-center">
+        <h2 className="text-4xl md:text-8xl font-handwritten text-[#DCAE96] mb-2">Our Memories</h2>
+        <p className="text-[#83C5BE] font-bold tracking-[0.1em] uppercase text-[10px] md:text-sm italic">← Swipe to see →</p>
       </div>
       
-      {/* Native Swipable Container - much better for phone */}
-      <div className="flex overflow-x-auto gap-8 px-8 md:px-24 pb-12 snap-x snap-mandatory scroll-smooth no-scrollbar">
+      {/* Native Swipable Container - Fixed for Mobile Viewport */}
+      <div className="flex overflow-x-auto gap-4 px-6 pb-12 snap-x snap-mandatory scroll-smooth no-scrollbar touch-pan-x">
         {moments.map((moment, idx) => (
-          <motion.div
+          <div
             key={idx}
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ delay: idx * 0.1 }}
-            className="flex-shrink-0 w-[80vw] md:w-96 snap-center relative"
+            className="flex-shrink-0 w-[85vw] md:w-96 snap-center"
           >
-            <div className="polaroid relative bg-white p-4 pb-16 shadow-2xl" style={{ rotate: `${idx % 2 === 0 ? -2 : 2}deg` }}>
-              <div className="tape bg-gray-200/40 absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-10 rotate-1 shadow-sm"></div>
-              
-              <div className="relative overflow-hidden aspect-square rounded-sm pointer-events-none">
-                <img src={moment.img} alt={moment.title} className="w-full h-full object-cover" />
-                <div className="absolute top-2 right-2">
-                   <img src="https://media.tenor.com/0i_p7H2uWf0AAAAi/sparkles.gif" className="w-10 h-10" alt="Sparkle" />
+            <div className="bg-white p-3 pb-12 shadow-xl border border-gray-100 rounded-sm transform transition-transform" style={{ rotate: `${idx % 2 === 0 ? -1 : 1}deg` }}>
+              <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-gray-50">
+                <img 
+                  src={moment.img} 
+                  alt={moment.title} 
+                  className="w-full h-full object-cover" 
+                />
+                <div className="absolute top-2 right-2 mix-blend-screen opacity-60">
+                   <img src="https://media.tenor.com/0i_p7H2uWf0AAAAi/sparkles.gif" className="w-8 h-8" alt="Sparkle" />
                 </div>
               </div>
               
-              <div className="mt-6 text-left px-2">
-                <h3 className="text-3xl font-handwritten text-[#E29578] mb-1 leading-tight">{moment.title}</h3>
-                <p className="text-[10px] text-[#83C5BE] font-bold uppercase tracking-widest mb-3">{moment.date}</p>
-                <p className="text-lg font-handwritten text-gray-600 italic">"{moment.note}"</p>
+              <div className="mt-4 px-1">
+                <h3 className="text-2xl font-handwritten text-[#E29578] mb-1 leading-tight">{moment.title}</h3>
+                <p className="text-[9px] text-[#83C5BE] font-bold uppercase tracking-widest mb-2">{moment.date}</p>
+                <p className="text-base font-handwritten text-gray-600 italic leading-snug leading-tight line-clamp-2">"{moment.note}"</p>
               </div>
 
-              <div className="absolute bottom-4 right-4">
-                <Heart className="text-[#83C5BE]/20" size={24} />
+              <div className="absolute bottom-3 right-3 opacity-20">
+                <Heart size={16} />
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>
@@ -523,24 +522,14 @@ export default function App() {
                   transition={{ duration: 1 }}
                   className="relative z-10 flex flex-col items-center"
                 >
-                  <div className="relative mb-12">
-                    <motion.div 
-                      animate={{ rotate: [0, 10, -10, 0] }}
-                      transition={{ duration: 5, repeat: Infinity }}
-                      className="absolute -top-32 -left-20 md:-left-40 hidden sm:block"
-                    >
-                      <img src="https://media.tenor.com/o669T96XmToAAAAi/pusheen-heart.gif" alt="Pusheen" className="w-40 md:w-56" />
-                    </motion.div>
-                    
-                    <motion.div 
-                      animate={{ y: [0, -20, 0] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                      className="absolute -top-32 -right-20 md:-right-40 hidden sm:block"
-                    >
-                      <img src="https://media.tenor.com/2Y0W9Z-8O0wAAAAi/stars-stardust.gif" alt="Stars" className="w-40 md:w-56" />
-                    </motion.div>
+                  <div className="relative mb-8 md:mb-12 w-full px-4">
+                    {/* Floating Mobile Decorations */}
+                    <div className="flex justify-between w-full mb-4 md:hidden">
+                       <img src="https://media.tenor.com/o669T96XmToAAAAi/pusheen-heart.gif" alt="Pusheen" className="w-16 h-16" />
+                       <img src="https://media.tenor.com/2Y0W9Z-8O0wAAAAi/stars-stardust.gif" alt="Stars" className="w-16 h-16" />
+                    </div>
 
-                    <h1 className="text-5xl md:text-[10rem] text-center font-handwritten text-[#DCAE96] leading-[1.1]">
+                    <h1 className="text-[2.8rem] md:text-[10rem] text-center font-handwritten text-[#DCAE96] leading-[1.2]">
                       Happy 1 Year, <br className="md:hidden" />
                       <span className="text-[#E29578]">Babe!</span>
                     </h1>
